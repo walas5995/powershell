@@ -1,6 +1,8 @@
 function connection{
     
-    .SYNOPSYS
+    <#
+
+    .SYNOPSIS
     Descripción de la función
     .DESCRIPTION
     Esta es la descripción
@@ -8,7 +10,7 @@ function connection{
     Primer ejemplo 1
     .EXAMPLE
     Segundo ejemplo 2
-    
+    #>
     
     #Prueba de Github
     
@@ -47,6 +49,19 @@ function connection{
         enter-pssession -ComputerName $servidor -Credential $usuario
     }
     function enviar_mail ($txt) {
+
+        <#
+
+    .SYNOPSIS
+    Descripción de la función
+    .DESCRIPTION
+    Esta es la descripción
+    .EXAMPLE
+    Primer ejemplo 1
+    .EXAMPLE
+    Segundo ejemplo 2
+    #>
+
         $rmail= "walas5995@gmail.com" 
         $email="incidenciasvsm@gmail.com"
         $asunto="Test"
