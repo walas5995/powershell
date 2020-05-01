@@ -1,5 +1,5 @@
 function connection{
-    <#
+    
     .SYNOPSYS
     Descripción de la función
     .DESCRIPTION
@@ -8,7 +8,7 @@ function connection{
     Primer ejemplo 1
     .EXAMPLE
     Segundo ejemplo 2
-    #>
+    
     
     #Prueba de Github
     
@@ -46,4 +46,13 @@ function connection{
         Set-Item WSMan:\localhost\Client\TrustedHosts -Value *
         enter-pssession -ComputerName $servidor -Credential $usuario
     }
-    
+    function enviar_mail ($txt) {
+        $rmail= "walas5995@gmail.com" 
+        $email="incidenciasvsm@gmail.com"
+        $asunto="Test"
+        $servermail="smtp.gmail.com"
+        $puerto="587"
+        $password = Get-Content "c:\script\password.txt" | ConvertTo-SecureString 
+        $cred = New-Object System.Management.Automation.PsCredential("incidenciasvsm@gmail.com",$password)
+        Send-MailMessage -To $rmail -Subject $asunto -body $txt -from $email -SmtpServer $servermail -Port $puerto -Credential $cred -usessl   
+    }
