@@ -1,3 +1,34 @@
+<#PSScriptInfo
+
+.VERSION 1.0
+
+.GUID 3bb10ee7-38c1-41b9-88ea-16899164fc19
+
+.AUTHOR pattif@contoso.com
+
+.COMPANYNAME
+
+.COPYRIGHT
+
+.TAGS
+
+.LICENSEURI
+
+.PROJECTURI
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+
+.PRIVATEDATA
+
+#>
 function connection{
     
     <#
@@ -94,6 +125,10 @@ function enviar_mail ($asunto,$descrip) {
     enviar_mail "Asunto del correo" "Este es el texto que enviar"
     .EXAMPLE
     enviar_mail $variable_string_1 $variable_string_2
+    .NOTES
+        Version:        1.0
+        Author:         Rubén Valeiro
+        Creation Date:  02-05-2020
     #>
 
     $password = ObtenerPWD
