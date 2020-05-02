@@ -1,33 +1,9 @@
-<#PSScriptInfo
-
-.VERSION 1.0
-
-.GUID 3bb10ee7-38c1-41b9-88ea-16899164fc19
-
-.AUTHOR pattif@contoso.com
-
-.COMPANYNAME
-
-.COPYRIGHT
-
-.TAGS
-
-.LICENSEURI
-
-.PROJECTURI
-
-.ICONURI
-
-.EXTERNALMODULEDEPENDENCIES
-
-.REQUIREDSCRIPTS
-
-.EXTERNALSCRIPTDEPENDENCIES
-
-.RELEASENOTES
-
-.PRIVATEDATA
-
+<#
+Módulo con cuatro funciones
+1-Connection
+2-Remote
+3-ObtenerPwdMail
+4-Enviar_mail
 #>
 function connection{
     
@@ -88,7 +64,7 @@ function remote{
         enter-pssession -ComputerName $servidor -Credential $usuario
 G}
     #Funcion enviar
-function ObtenerPWD () {
+function ObtenerPwdMail () {
     <#
     .SYNOPSIS
     Función para obtener la contraseña del correo electrónico
@@ -131,7 +107,7 @@ function enviar_mail ($asunto,$descrip) {
         Creation Date:  02-05-2020
     #>
 
-    $password = ObtenerPWD
+    $password = ObtenerPwdMail
 
     $rmail= "walas5995@gmail.com" 
     $email="incidenciasvsm@gmail.com"
