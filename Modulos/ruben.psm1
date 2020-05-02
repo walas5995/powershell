@@ -3,7 +3,10 @@ Módulo con cuatro funciones
 1-Connection
 2-Remote
 3-ObtenerPwdMail
-4-Enviar_mail
+4-ObtenerPwdBD
+5-Enviar_mail
+6-carpetaBBD
+7-BackupBD
 #>
 function connection{
     
@@ -62,7 +65,7 @@ function remote{
         )
         Set-Item WSMan:\localhost\Client\TrustedHosts -Value *
         enter-pssession -ComputerName $servidor -Credential $usuario
-G}
+    }
     #Funcion enviar
 function ObtenerPwdMail () {
     <#
@@ -85,6 +88,32 @@ function ObtenerPwdMail () {
             mkdir C:\scripts
             (Get-Credential).Password | ConvertFrom-SecureString | Set-Content C:\scripts\password_correo.txt
             $password = Get-Content "c:\scripts\password_correo.txt" | ConvertTo-SecureString 
+    
+        }
+    }
+    Return $password  
+}
+function ObtenerPwdBD () {
+    <#
+    .SYNOPSIS
+    Función para obtener la contraseña del correo electrónico
+    .DESCRIPTION
+    Comprueba que exista tanto la carpeta como el archivo "TXT" que contiene la contraseña
+    #>
+    $carpetaPWD = Get-Item C:\scripts
+    $archicoPWD = Get-ChildItem -Path "C:\scripts\password_BD.txt"
+    if($archicoPWD){
+        $password = Get-Content "c:\scripts\password_BD.txt" | ConvertTo-SecureString 
+    
+    }else{
+        if($carpetaPWD){
+            (Get-Credential).Password | ConvertFrom-SecureString | Set-Content C:\scripts\password_correo.txt
+            $password = Get-Content "c:\scripts\password_BD.txt" | ConvertTo-SecureString 
+    
+        }else{
+            mkdir C:\scripts
+            (Get-Credential).Password | ConvertFrom-SecureString | Set-Content C:\scripts\password_correo.txt
+            $password = Get-Content "c:\scripts\password_BD.txt" | ConvertTo-SecureString 
     
         }
     }
@@ -115,6 +144,51 @@ function enviar_mail ($asunto,$descrip) {
     $puerto="587"
     $cred = New-Object System.Management.Automation.PsCredential("incidenciasvsm@gmail.com",$password)
     Send-MailMessage -To $rmail -Subject $asunto -body $descrip -from $email -SmtpServer $servermail -Port $puerto -Credential $cred -usessl       
-    
+}
+function carpetaBBD () {
+    <#
+    .SYNOPSIS
+    Función para crear carpeta "backupBD"
+    .DESCRIPTION
+    Comprueba que exista la carpeta
+    #>
+    $carpetaPWD = Get-Item C:\backupBD
+        if($carpetaPWD){
+        #la carpeta existe !!!
+        }else{
+            mkdir C:\backupBD
+        }
+}
+function backupBD(){
+        <#
+        .SYNOPSIS
+        Backup de la base de datos.
+        .DESCRIPTION
+        Tenemos que proporcionar el nombre de la instancia y el nombre de la base de datos 
+        .EXAMPLE
+        backupBD "instanceDB" "nameDB"
+        #>
+        param (
+            [Parameter(Mandatory=$True,Position=1)]
+            [string]$instanceDB = ".\sqlexpress",
+            [Parameter(Mandatory=$True,Position=2)]
+            [string]$nameDB
+        )
+        $pwd = ObtenerPwdBD
+        $cred = New-Object System.Management.Automation.PSCredential("sa",$pwd)
+        #Ejecutar Consulta
+        #Invoke-Sqlcmd -ServerInstance ".\sqlexpress" -Query "select * from BD_Test.dbo.personal"
+        
+        #backup de la base de datos
+        #InstanceDB (default) --> ".\sqlexpress"
+        $carpeta = "c:\backupBD"
+        $fecha = Get-Date -UFormat "%Y%m%d"
+        $nameDB2= "prueba2"
+        $archivo= "c:\backupBD\"+$nameDB2+"_"+$fecha+".bak"
+
+        Backup-SqlDatabase -BackupFile $archivo -ServerInstance $instanceDB -Database $nameDB -Credential $cred
+
+
+}
    
-    }
+    
