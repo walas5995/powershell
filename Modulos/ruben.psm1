@@ -3,13 +3,13 @@ function connection{
     <#
 
     .SYNOPSIS
-    Descripción de la función
+    Funcion para habilitar el escritorio remoto en un servidor
     .DESCRIPTION
-    Esta es la descripción
+    Solo se permiten los parametros "deny" o "permit"
     .EXAMPLE
-    Primer ejemplo 1
+    conenction deny
     .EXAMPLE
-    Segundo ejemplo 2
+    connection permit
     #>
     
     #Prueba de Github
@@ -39,6 +39,14 @@ function connection{
     }
     # ****************** Funciona - Iniciar Sesión remota ******************+
 function remote{
+    <#
+    .SYNOPSIS
+    Función para abrir una conexión "PSSession" remota
+    .DESCRIPTION
+    Se envia un email con el texto personalizado para el Asunto y la descripción
+    .EXAMPLE
+    remote "nombre_servidor" "nombre_usuario"
+    #>
         param (
             [Parameter(Mandatory=$True,Position=1)]
             [string]$servidor,
@@ -50,6 +58,12 @@ function remote{
 G}
     #Funcion enviar
 function ObtenerPWD () {
+    <#
+    .SYNOPSIS
+    Función para obtener la contraseña del correo electrónico
+    .DESCRIPTION
+    Comprueba que exista tanto la carpeta como el archivo "TXT" que contiene la contraseña
+    #>
     $carpetaPWD = Get-Item C:\scripts
     $archicoPWD = Get-ChildItem -Path "C:\scripts\password_correo.txt"
     if($archicoPWD){
@@ -75,11 +89,11 @@ function enviar_mail ($asunto,$descrip) {
     .SYNOPSIS
     Función para enviar un mail
     .DESCRIPTION
-    Se envia un email con el texto que pongas
+    Se envia un email con el texto personalizado para el Asunto y la descripción
     .EXAMPLE
-    enviar_mail "Este es el texto que enviar"
+    enviar_mail "Asunto del correo" "Este es el texto que enviar"
     .EXAMPLE
-    enviar_mail $variable_string
+    enviar_mail $variable_string_1 $variable_string_2
     #>
 
     $password = ObtenerPWD
