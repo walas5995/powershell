@@ -38,7 +38,7 @@ function connection{
         }
     }
     # ****************** Funciona - Iniciar Sesión remota ******************+
-    function remote{
+function remote{
         param (
             [Parameter(Mandatory=$True,Position=1)]
             [string]$servidor,
@@ -47,27 +47,49 @@ function connection{
         )
         Set-Item WSMan:\localhost\Client\TrustedHosts -Value *
         enter-pssession -ComputerName $servidor -Credential $usuario
+G}
+    #Funcion enviar
+function ObtenerPWD () {
+    $carpetaPWD = Get-Item C:\scripts
+    $archicoPWD = Get-ChildItem -Path "C:\scripts\password_correo.txt"
+    if($archicoPWD){
+        $password = Get-Content "c:\scripts\password_correo.txt" | ConvertTo-SecureString 
+    
+    }else{
+        if($carpetaPWD){
+            (Get-Credential).Password | ConvertFrom-SecureString | Set-Content C:\scripts\password_correo.txt
+            $password = Get-Content "c:\scripts\password_correo.txt" | ConvertTo-SecureString 
+    
+        }else{
+            mkdir C:\scripts
+            (Get-Credential).Password | ConvertFrom-SecureString | Set-Content C:\scripts\password_correo.txt
+            $password = Get-Content "c:\scripts\password_correo.txt" | ConvertTo-SecureString 
+    
+        }
     }
-    function enviar_mail ($txt) {
+    Return $password  
+}
+function enviar_mail ($asunto,$descrip) {
 
-        <#
-
+    <#
     .SYNOPSIS
-    Descripción de la función
+    Función para enviar un mail
     .DESCRIPTION
-    Esta es la descripción
+    Se envia un email con el texto que pongas
     .EXAMPLE
-    Primer ejemplo 1
+    enviar_mail "Este es el texto que enviar"
     .EXAMPLE
-    Segundo ejemplo 2
+    enviar_mail $variable_string
     #>
 
-        $rmail= "walas5995@gmail.com" 
-        $email="incidenciasvsm@gmail.com"
-        $asunto="Test"
-        $servermail="smtp.gmail.com"
-        $puerto="587"
-        $password = Get-Content "c:\script\password.txt" | ConvertTo-SecureString 
-        $cred = New-Object System.Management.Automation.PsCredential("incidenciasvsm@gmail.com",$password)
-        Send-MailMessage -To $rmail -Subject $asunto -body $txt -from $email -SmtpServer $servermail -Port $puerto -Credential $cred -usessl   
+    $password = ObtenerPWD
+
+    $rmail= "walas5995@gmail.com" 
+    $email="incidenciasvsm@gmail.com"
+    $servermail="smtp.gmail.com"
+    $puerto="587"
+    $cred = New-Object System.Management.Automation.PsCredential("incidenciasvsm@gmail.com",$password)
+    Send-MailMessage -To $rmail -Subject $asunto -body $descrip -from $email -SmtpServer $servermail -Port $puerto -Credential $cred -usessl       
+    
+   
     }
