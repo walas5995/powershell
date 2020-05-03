@@ -11,6 +11,7 @@ Indice de funciones:
 5-Enviar_mail
 6-CarpetaBBD
 7-BackupBD
+8-InfoSRV
 #>
 
 #Función habilitar el escritorio remoto
@@ -229,5 +230,35 @@ function backupBD(){
 
 
 }
+function infoSRV{
+    <#
+            .SYNOPSIS
+            Mostrar información de los servidores de la empresa
+            .DESCRIPTION
+            Obtenemos memoria, disco duro, ROL,...
+            .EXAMPLE
+            infoSRV "nombre_SRV"
+            .NOTES
+            Version:        1.0
+            Author:         Rubén Valeiro
+            Creation Date:  03-05-2020
+            #>
+            param (
+                [Parameter(Mandatory=$True,Position=1)]
+                [string]$srv
+            )
+            $infoPC = Get-ComputerInfo
+            Write-Host "Nombre: " $infoPC.CsName
+            Write-Host "Nombre: " $infoPC.CsName
+            Write-Host "Nombre: " $infoPC.CsName
+            #Memoria
+            $PysicalMemory = Get-WmiObject -class "win32_physicalmemory" -namespace "root\CIMV2" -ComputerName $srv
+            write-Host "Memoria Total: $((($PysicalMemory).Capacity | Measure-Object -Sum).Sum/1GB)GB" 
+            #Disco Duro
+            Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" |
+            Measure-Object -Property FreeSpace,Size -Sum |
+            Select-Object -Property Property,Sum   
+        }
+
    
     
