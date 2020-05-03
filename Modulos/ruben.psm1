@@ -248,16 +248,33 @@ function infoSRV{
                 [string]$srv
             )
             $infoPC = Get-ComputerInfo
+            Write-Host "******* INFO *******"
             Write-Host "Nombre: " $infoPC.CsName
-            Write-Host "Nombre: " $infoPC.CsName
-            Write-Host "Nombre: " $infoPC.CsName
+            Write-Host "Arquitectura: " $infoPC.OsArchitecture
+            Write-Host "Sistema Operativo: " $infoPC.WindowsProductName
+            Write-Host "Dominio: " $infoPC.CsDomain
+            Write-Host "Procesador: " $infoPC.CsProcessors
             #Memoria
+            Write-Host "Memoria RAM"
             $PysicalMemory = Get-WmiObject -class "win32_physicalmemory" -namespace "root\CIMV2" -ComputerName $srv
-            write-Host "Memoria Total: $((($PysicalMemory).Capacity | Measure-Object -Sum).Sum/1GB)GB" 
+            write-Host "Total: $((($PysicalMemory).Capacity | Measure-Object -Sum).Sum/1GB)GB" 
             #Disco Duro
-            Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" |
-            Measure-Object -Property FreeSpace,Size -Sum |
-            Select-Object -Property Property,Sum   
+            Write-Host "Disco Duro"
+            $disco_libre = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" | select -ExpandProperty freespace
+            Write-Host "Libre: "$disco_libre
+            $disco_total = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" |
+            select -ExpandProperty size
+            Write-Host "Total: "$disco_total
+            #Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" |
+            #Measure-Object -Property FreeSpace,Size -Sum |
+            #Select-Object -Property Property,Sum
+            #Red 
+            $ips=Get-NetIPAddress | where {$_.AddressFamily -eq "IPv4"}
+            Write-Host "Direcciónes IP"
+            foreach($ip in $ips){
+                Write-Host "*: "$ip.ipaddress
+            }
+            
         }
 
    
