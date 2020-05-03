@@ -307,11 +307,22 @@ function infoSRV {
     Write-Host "       "            
 }
 function crearHTML{
+    <#
+            .SYNOPSIS
+            Crea web pasando una variable 
+            .DESCRIPTION
+            Crea un archivo ".HTML" con una tabla 
+            .EXAMPLE
+            crearHTML $variable
+            .NOTES
+            Version:        1.0
+            Author:         Rubén Valeiro
+            Creation Date:  03-05-2020
+            #>
     param (
         [Parameter(Mandatory = $True, Position = 1)]
         $info
     )
-#region CSS
 $Header = @"
 <style>
 table{
@@ -333,7 +344,7 @@ thead{
 }
 </style>
 "@
-#endregion
+
     import-module EnhancedHTML2 -Force 
     $resultado = $info | ConvertTo-EnhancedHTMLFragment -As Table -PreContent "<h2>Informe Walas</h2>" -MakeTableDynamic
     #-CssStyleSheet  $Header  -CssUri .\style.css
