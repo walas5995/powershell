@@ -306,6 +306,8 @@ function infoSRV {
     }
     Write-Host "       "            
 }
+
+
 function crearHTML{
     <#
             .SYNOPSIS
@@ -323,8 +325,11 @@ function crearHTML{
                 [Parameter(Mandatory = $True, Position = 1)]
                 $info
             )
-            write-Host $info | select csname
+            write-Host $info | select CsName
+            $resultado = $info | Select CsName,csdomain,OsArchitecture,WindowsProductName | ConvertTo-EnhancedHTMLFragment -As Table -PreContent "<h2>Dynamic Services</h2>" -MakeTableDynamic
+
             #$resultado = $info | select csname,csdomain,WindowsProductName,OsArchitecture | ConvertTo-EnhancedHTMLFragment -As Table -PreContent "<h2> Normal Services</h2>"
             # Opción   -CssUri C:\scripts\style.css
-            #ConvertTo-EnhancedHTML -HTMLFragments $resultado | Out-File c:\scripts\informe.html
+            write-Host $resultado
+            ConvertTo-EnhancedHTML -HTMLFragments $resultado -CssUri C:\scripts\style.css | Out-File c:\scripts\informe.html
 }
