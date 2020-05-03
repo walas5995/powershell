@@ -1,25 +1,35 @@
 <#
-Módulo con cuatro funciones
+Módulo de PowerShell
+Creado por "Rubén Valeiro"
+
+Indice de funciones:
+
 1-Connection
 2-Remote
 3-ObtenerPwdMail
 4-ObtenerPwdBD
 5-Enviar_mail
-6-carpetaBBD
+6-CarpetaBBD
 7-BackupBD
 #>
+
+#Función habilitar el escritorio remoto
 function connection{
     
     <#
 
     .SYNOPSIS
-    Funcion para habilitar el escritorio remoto en un servidor
+    Función para habilitar el escritorio remoto en un servidor
     .DESCRIPTION
     Solo se permiten los parametros "deny" o "permit"
     .EXAMPLE
     conenction deny
     .EXAMPLE
     connection permit
+    .NOTES
+        Version:        1.0
+        Author:         Rubén Valeiro
+        Creation Date:  02-05-2020
     #>
     
     #Prueba de Github
@@ -47,7 +57,7 @@ function connection{
         }
         }
 }
-# ****************** Funciona - Iniciar Sesión remota ******************+
+#Función para crear una conexión remota de powershell
 function remote{
     <#
     .SYNOPSIS
@@ -56,6 +66,10 @@ function remote{
     Se envia un email con el texto personalizado para el Asunto y la descripción
     .EXAMPLE
     remote "nombre_servidor" "nombre_usuario"
+    .NOTES
+        Version:        1.0
+        Author:         Rubén Valeiro
+        Creation Date:  02-05-2020
     #>
         param (
             [Parameter(Mandatory=$True,Position=1)]
@@ -66,13 +80,17 @@ function remote{
         Set-Item WSMan:\localhost\Client\TrustedHosts -Value *
         enter-pssession -ComputerName $servidor -Credential $usuario
 }
-#Funcion enviar
+#Función para obtener la contraseña para enviar el correo
 function ObtenerPwdMail () {
     <#
     .SYNOPSIS
     Función para obtener la contraseña del correo electrónico
     .DESCRIPTION
     Comprueba que exista tanto la carpeta como el archivo "TXT" que contiene la contraseña
+    .NOTES
+        Version:        1.0
+        Author:         Rubén Valeiro
+        Creation Date:  02-05-2020
     #>
     $carpetaPWD = Get-Item C:\scripts
     $archicoPWD = Get-ChildItem -Path "C:\scripts\password_correo.txt"
@@ -93,12 +111,17 @@ function ObtenerPwdMail () {
     }
     Return $password  
 }
+#Función para obtener la contraseña para trabajar con la base de datos
 function ObtenerPwdBD () {
     <#
     .SYNOPSIS
     Función para obtener la contraseña del correo electrónico
     .DESCRIPTION
     Comprueba que exista tanto la carpeta como el archivo "TXT" que contiene la contraseña
+    .NOTES
+        Version:        1.0
+        Author:         Rubén Valeiro
+        Creation Date:  02-05-2020
     #>
     $carpetaPWD = Get-Item C:\scripts
     $archicoPWD = Get-ChildItem -Path "C:\scripts\password_BD.txt"
@@ -119,7 +142,8 @@ function ObtenerPwdBD () {
     }
     Return $password  
 }
-function enviar_mail ($asunto,$descrip) {
+#Función para enviar el correo electrónico
+function enviar_mail () {
 
     <#
     .SYNOPSIS
@@ -135,7 +159,12 @@ function enviar_mail ($asunto,$descrip) {
         Author:         Rubén Valeiro
         Creation Date:  02-05-2020
     #>
-
+    param (
+        [Parameter(Mandatory=$True,Position=1)]
+        [string]$asunto,
+        [Parameter(Mandatory=$True,Position=2)]
+        [string]$descrip
+    )
     $password = ObtenerPwdMail
 
     $rmail= "walas5995@gmail.com" 
@@ -145,12 +174,17 @@ function enviar_mail ($asunto,$descrip) {
     $cred = New-Object System.Management.Automation.PsCredential("incidenciasvsm@gmail.com",$password)
     Send-MailMessage -To $rmail -Subject $asunto -body $descrip -from $email -SmtpServer $servermail -Port $puerto -Credential $cred -usessl       
 }
+#Función que comprueba si existe la carpeta donde guardar la copia
 function carpetaBBD () {
     <#
     .SYNOPSIS
     Función para crear carpeta "backupBD"
     .DESCRIPTION
     Comprueba que exista la carpeta
+    .NOTES
+        Version:        1.0
+        Author:         Rubén Valeiro
+        Creation Date:  02-05-2020
     #>
     $carpetaPWD = Get-Item C:\backupBD
         if($carpetaPWD){
@@ -159,6 +193,7 @@ function carpetaBBD () {
             mkdir C:\backupBD
         }
 }
+#Función que guarda una copia de seguridad de la BD que le indiquemos
 function backupBD(){
         <#
         .SYNOPSIS
@@ -167,6 +202,10 @@ function backupBD(){
         Tenemos que proporcionar el nombre de la instancia (".\sqlexpress") y el nombre de la base de datos 
         .EXAMPLE
         backupBD "instanceDB" "nameDB"
+        .NOTES
+        Version:        1.0
+        Author:         Rubén Valeiro
+        Creation Date:  02-05-2020
         #>
         param (
             [Parameter(Mandatory=$True,Position=1)]
