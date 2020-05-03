@@ -46,8 +46,8 @@ function connection{
         Write-host "******* Utilice 'deny' o 'permit' *******"
         }
         }
-    }
-    # ****************** Funciona - Iniciar Sesión remota ******************+
+}
+# ****************** Funciona - Iniciar Sesión remota ******************+
 function remote{
     <#
     .SYNOPSIS
@@ -65,8 +65,8 @@ function remote{
         )
         Set-Item WSMan:\localhost\Client\TrustedHosts -Value *
         enter-pssession -ComputerName $servidor -Credential $usuario
-    }
-    #Funcion enviar
+}
+#Funcion enviar
 function ObtenerPwdMail () {
     <#
     .SYNOPSIS
@@ -81,12 +81,12 @@ function ObtenerPwdMail () {
     
     }else{
         if($carpetaPWD){
-            (Get-Credential).Password | ConvertFrom-SecureString | Set-Content C:\scripts\password_correo.txt
+            (Get-Credential).Password | ConvertFrom-SecureString | Out-File C:\scripts\password_correo.txt
             $password = Get-Content "c:\scripts\password_correo.txt" | ConvertTo-SecureString 
     
         }else{
             mkdir C:\scripts
-            (Get-Credential).Password | ConvertFrom-SecureString | Set-Content C:\scripts\password_correo.txt
+            (Get-Credential).Password | ConvertFrom-SecureString | Out-File C:\scripts\password_correo.txt
             $password = Get-Content "c:\scripts\password_correo.txt" | ConvertTo-SecureString 
     
         }
@@ -107,12 +107,12 @@ function ObtenerPwdBD () {
     
     }else{
         if($carpetaPWD){
-            (Get-Credential).Password | ConvertFrom-SecureString | Set-Content C:\scripts\password_correo.txt
+            (Get-Credential).Password | ConvertFrom-SecureString | Out-File C:\scripts\password_BD.txt
             $password = Get-Content "c:\scripts\password_BD.txt" | ConvertTo-SecureString 
     
         }else{
             mkdir C:\scripts
-            (Get-Credential).Password | ConvertFrom-SecureString | Set-Content C:\scripts\password_correo.txt
+            (Get-Credential).Password | ConvertFrom-SecureString | Out-File C:\scripts\password_BD.txt
             $password = Get-Content "c:\scripts\password_BD.txt" | ConvertTo-SecureString 
     
         }
@@ -175,6 +175,7 @@ function backupBD(){
             [string]$nameDB
         )
         $pwd = ObtenerPwdBD
+        carpetaBBD
         $cred = New-Object System.Management.Automation.PSCredential("sa",$pwd)
         #Ejecutar Consulta
         #Invoke-Sqlcmd -ServerInstance ".\sqlexpress" -Query "select * from BD_Test.dbo.personal"
@@ -183,8 +184,7 @@ function backupBD(){
         #InstanceDB (default) --> ".\sqlexpress"
         $carpeta = "c:\backupBD"
         $fecha = Get-Date -UFormat "%Y%m%d"
-        $nameDB2= "prueba2"
-        $archivo= "c:\backupBD\"+$nameDB2+"_"+$fecha+".bak"
+        $archivo= "c:\backupBD\"+$nameDB+"_"+$fecha+".bak"
 
         Backup-SqlDatabase -BackupFile $archivo -ServerInstance $instanceDB -Database $nameDB -Credential $cred
 
