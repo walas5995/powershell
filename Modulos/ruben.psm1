@@ -306,30 +306,36 @@ function infoSRV {
     }
     Write-Host "       "            
 }
-
-
 function crearHTML{
-    <#
-            .SYNOPSIS
-            Crear informe en HTML
-            .DESCRIPTION
-            Crear informe en HTML
-            .EXAMPLE
-            crearHTML "variable"
-            .NOTES
-            Version:        1.0
-            Author:         Rubén Valeiro
-            Creation Date:  03-05-2020
-            #>
-            param (
-                [Parameter(Mandatory = $True, Position = 1)]
-                $info
-            )
-            write-Host $info | select CsName
-            $resultado = $info | Select CsName,csdomain,OsArchitecture,WindowsProductName | ConvertTo-EnhancedHTMLFragment -As Table -PreContent "<h2>Dynamic Services</h2>" -MakeTableDynamic
+    param (
+        [Parameter(Mandatory = $True, Position = 1)]
+        $info
+    )
+#region CSS
+$Header = @"
+<style>
+table{
 
-            #$resultado = $info | select csname,csdomain,WindowsProductName,OsArchitecture | ConvertTo-EnhancedHTMLFragment -As Table -PreContent "<h2> Normal Services</h2>"
-            # Opción   -CssUri C:\scripts\style.css
-            write-Host $resultado
-            ConvertTo-EnhancedHTML -HTMLFragments $resultado -CssUri C:\scripts\style.css | Out-File c:\scripts\informe.html
+}
+.enhancedhtml-dynamic-table{
+    background-color: #333;
+	color: white;
+	padding: 25px;  
+}
+h2{
+    text-align: center;
+}
+thead{
+    background-color:#333;
+    color:white;
+    text-align:left;
+    vertical-align:bottom;
+}
+</style>
+"@
+#endregion
+    import-module EnhancedHTML2 -Force 
+    $resultado = $info | ConvertTo-EnhancedHTMLFragment -As Table -PreContent "<h2>Informe Walas</h2>" -MakeTableDynamic
+    #-CssStyleSheet  $Header  -CssUri .\style.css
+    ConvertTo-EnhancedHTML -HTMLFragments $resultado -CssStyleSheet $Header | Out-File c:\scripts\informe.html
 }
