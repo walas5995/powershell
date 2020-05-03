@@ -249,33 +249,65 @@ function infoSRV{
             )
             $infoPC = Get-ComputerInfo
             Write-Host "******* INFO *******"
+            Write-Host "       "
             Write-Host "Nombre: " $infoPC.CsName
-            Write-Host "Arquitectura: " $infoPC.OsArchitecture
-            Write-Host "Sistema Operativo: " $infoPC.WindowsProductName
             Write-Host "Dominio: " $infoPC.CsDomain
-            Write-Host "Procesador: " $infoPC.CsProcessors
+            Write-Host "Sistema Operativo: " $infoPC.WindowsProductName
+            Write-Host "Arquitectura: " $infoPC.OsArchitecture
+            #Write-Host "Procesador: " $infoPC.CsProcessors
             #Memoria
+            Write-Host "       "
             Write-Host "Memoria RAM"
+            Write-Host "       "
             $PysicalMemory = Get-WmiObject -class "win32_physicalmemory" -namespace "root\CIMV2" -ComputerName $srv
             write-Host "Total: $((($PysicalMemory).Capacity | Measure-Object -Sum).Sum/1GB)GB" 
             #Disco Duro
-            Write-Host "Disco Duro"
+            <#
             $disco_libre = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" | select -ExpandProperty freespace
-            Write-Host "Libre: "$disco_libre
             $disco_total = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" |
             select -ExpandProperty size
+            Write-Host "Disco Duro - Personal"
+            Write-Host "Libre: "$disco_libre
             Write-Host "Total: "$disco_total
+            #>
+            #Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" |
+            #Measure-Object -Property FreeSpace,Size -Sum |
+            #Select-Object -Property Property,Sum           
+            #Disco Duro
+            Write-Host "       "
+            Write-Host "Disco Duro"
+            Write-Host "       "
+            $partitions= Get-WmiObject -Class Win32_LogicalDisk -Filter 'DriveType = 3' |Select-Object PSComputerName, Caption,@{N='Capacity_GB'; E={[math]::Round(($_.Size / 1GB), 2)}},@{N='FreeSpace_GB'; E={[math]::Round(($_.FreeSpace / 1GB), 2)}},@{N='PercentUsed'; E={[math]::Round(((($_.Size - $_.FreeSpace) / $_.Size) * 100), 2) }},@{N='PercentFree'; E={[math]::Round((($_.FreeSpace / $_.Size) * 100), 2) }}
+            foreach($z in $partitions)
+            {  
+                Write-Host "Particion         : $($z.Caption)" ;    
+                Write-Host "Capacidad Total   : $($z.Capacity_GB)  GB" ;    
+                Write-Host "Espacio Libre     : $($z.FreeSpace_GB) GB" ;    
+                Write-Host "Porcentaje Usado  : $($z.PercentUsed)  %" ;    
+                Write-Host "Porcentaje Libre  : $($z.PercentFree)  %" ;   
+                Write-Host "";   
+            }
+            Write-Host "       "
+            <#
+            $disco_libre = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" | select -ExpandProperty freespace
+            $disco_total = Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" |
+            select -ExpandProperty size
+            Write-Host "Disco Duro - Personal"
+            Write-Host "Libre: "$disco_libre
+            Write-Host "Total: "$disco_total
+            #>
             #Get-CimInstance -ClassName Win32_LogicalDisk -Filter "DriveType=3" |
             #Measure-Object -Property FreeSpace,Size -Sum |
             #Select-Object -Property Property,Sum
             #Red 
             $ips=Get-NetIPAddress | where {$_.AddressFamily -eq "IPv4"}
-            Write-Host "Direcciónes IP"
+            Write-Host "Direcciones IP"
+            Write-Host "       "
             foreach($ip in $ips){
                 Write-Host "*: "$ip.ipaddress
             }
-            
-        }
+            Write-Host "       "            
+}
 
    
     
