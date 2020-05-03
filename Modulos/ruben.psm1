@@ -164,13 +164,13 @@ function backupBD(){
         .SYNOPSIS
         Backup de la base de datos.
         .DESCRIPTION
-        Tenemos que proporcionar el nombre de la instancia y el nombre de la base de datos 
+        Tenemos que proporcionar el nombre de la instancia (".\sqlexpress") y el nombre de la base de datos 
         .EXAMPLE
         backupBD "instanceDB" "nameDB"
         #>
         param (
             [Parameter(Mandatory=$True,Position=1)]
-            [string]$instanceDB = ".\sqlexpress",
+            [string]$instanceDB,
             [Parameter(Mandatory=$True,Position=2)]
             [string]$nameDB
         )
