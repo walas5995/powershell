@@ -69,7 +69,7 @@ $Head =@"
 
 #Cram the body and the Head into completed HTML code
 #$HTML = ConvertTo-Html -Body $Body -Head $Head
-$HTML = ConvertTo-EnhancedHTML -HTMLFragments $Body -PreContent $Head -CssStyleSheet "" -jQueryDataTableURI "vendor/datatables/dataTables.bootstrap4.min.js" -jQueryURI "vendor/datatables/jquery.dataTables.js"
+$HTML = ConvertTo-EnhancedHTML -HTMLFragments $Body -CssUri "vendor/datatables/dataTables.bootstrap4.min.css"
 
 #Create an HTML file in a temp directory
 $HTML | Out-File -filepath "C:\inetpub\wwwroot\vscode\informe_I.html" -Force

@@ -4,6 +4,7 @@ Creado por "Rubén Valeiro"
 
 Indice de funciones:
 
+0-Funciones
 1-Connection
 2-Remote
 3-ObtenerPwdMail
@@ -13,9 +14,29 @@ Indice de funciones:
 7-BackupBD
 8-InfoSRV
 9-CrearHTML
+10-LogReinicios
 #>
 
 #Función habilitar el escritorio remoto
+function funciones {
+$fun=@"
+*** Indice ***
+
+1-Connection
+2-Remote
+3-ObtenerPwdMail
+4-ObtenerPwdBD
+5-Enviar_mail
+6-CarpetaBBD
+7-BackupBD
+8-InfoSRV
+9-CrearHTML
+10-LogReinicios
+
+****************
+"@
+Write-Host $fun
+}
 function connection {
     
     <#
@@ -349,4 +370,44 @@ thead{
     $resultado = $info | ConvertTo-EnhancedHTMLFragment -As Table -PreContent "<h2>Informe Walas</h2>" -MakeTableDynamic
     #-CssStyleSheet  $Header  -CssUri .\style.css
     ConvertTo-EnhancedHTML -HTMLFragments $resultado -CssStyleSheet $Header | Out-File c:\scripts\informe.html
+}
+function LogReinicios {
+    <#
+            .SYNOPSIS
+            Muestra los evento de apagado del sistema
+            .DESCRIPTION
+            Muestra los eventos del log de sistema por apagado del ordenador (1074)
+            .EXAMPLE
+            LogReinicios $computer
+            .NOTES
+            Version:        1.0
+            Author:         Rubén Valeiro
+            Creation Date:  03-05-2020
+            #>
+param (
+    [Parameter(Mandatory = $True, Position = 0)]
+    [string]$computer
+)
+            Get-EventLog -ComputerName $computer -LogName "system" | 
+            Select-Object -First 1000 | Where-Object {$_.EventID -eq "1074"} | 
+            Select-Object Index,EventID,Timegenerated,Message |Format-List
+
+}
+function InfoActivacion {
+    <#
+            .SYNOPSIS
+            Información sobre la activación del sistema operativo
+            .DESCRIPTION
+            Nos muestra  el tipo de licencia,los últimos digitos ,
+            estado de la misma y cuando expira.
+            .EXAMPLE
+            InfoActivacion $variable
+            .NOTES
+            Version:        1.0
+            Author:         Rubén Valeiro
+            Creation Date:  05-05-2020
+            #>
+    $licencia = Get-Command slmgr.vbs
+    $data = $licencia | Select-Object -ExpandProperty source
+    cscript $data /dli
 }
