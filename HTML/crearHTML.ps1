@@ -32,7 +32,7 @@ $Header = @"
   <!-- Custom styles for this page -->
   <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 "@
-$body = @"
+$precontenido = @"
 <div class='container-fluid'>
 <h1 class='h3 mb-2 text-gray-800'>Informe</h1>
 <p class='mb-4'>Este es un informe generado desde un script de Powershell</p>
@@ -43,7 +43,7 @@ $body = @"
 <div class='card-body'>
 <div class='table-responsive'>
 "@
-$footer=@"
+$postcontenido=@"
 </div>
 </div>
 </div>
@@ -51,9 +51,9 @@ $footer=@"
 "@
 #endregion
     import-module EnhancedHTML2 -Force 
-    $resultado = $info | ConvertTo-HTML -Head $Header -
+    $resultado = $info | ConvertTo-HTML -Head $Header -PreContent $precontenido -PostContent $postcontenido
     $resultado | Out-File C:\inetpub\wwwroot\vscode\informe.html
 }
 
-$info = Get-Service | select name,status
-crearhtml $info
+$tabla = Get-Service | Select-Object name,status
+crearhtml $tabla
