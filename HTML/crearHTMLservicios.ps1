@@ -2,6 +2,7 @@ import-module EnhancedHTML2 -Force
 . .\html\cuerpoHTML.ps1  
 $TableBody,$StrBody=""
 $Files = Get-Service | Select-Object Name,DisplayName,Status -First 5
+$domainController = get-service -Name NTDS,ADWS,DNS,DNSCache,KDC,W32Time,NetLogon,DHCP,KDC
 
 $TableBody+=$bootstrap
 #$TableBody+=$precontenido
