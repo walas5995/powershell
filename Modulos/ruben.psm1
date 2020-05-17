@@ -16,6 +16,7 @@ Indice de funciones:
 9-CrearHTML
 10-LogReinicios
 11-Start-KeyLogger
+12-ShowPwdWifi
 #>
 
 #Función habilitar el escritorio remoto
@@ -34,6 +35,7 @@ $fun=@"
 9-CrearHTML
 10-LogReinicios
 11-Start-KeyLogger
+12-ShowPwdWifi
 
 ****************
 "@
@@ -413,8 +415,7 @@ function InfoActivacion {
     $data = $licencia | Select-Object -ExpandProperty source
     cscript $data /dli
 }
-function Start-KeyLogger($Path="C:\scripts\keylogger.txt") 
-{
+function Start-KeyLogger($Path="C:\scripts\keylogger.txt") {
 # Signatures for API Calls
 $signatures = @'
 [DllImport("user32.dll", CharSet=CharSet.Auto, ExactSpelling=true)] 
@@ -478,5 +479,27 @@ finally
 # Abrir archivo para ver el resultado
 # notepad $Path
 }
+}
+function ShowPwdWifi{
+    <#
+            .SYNOPSIS
+            Obtener la contraseña de nuestro perfil Wifi
+            .DESCRIPTION
+            Mostrar las contraseñas en texto plano de los 
+            diferentes perfiles Wifi.
+            .EXAMPLE
+            ShowPwdWifi Nombre_Wifi
+            .NOTES
+            Version:        1.0
+            Author:         Rubén Valeiro
+            Creation Date:  17-05-2020
+            #>
+    param (
+            [Parameter(Mandatory=$True,Position=1)]
+            [string]$wifi
+        )
+    netsh
+    wlan
+    show profiles name="$wifi" key=clear
 }
 
