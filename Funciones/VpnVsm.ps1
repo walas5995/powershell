@@ -1,0 +1,5 @@
+$app = "C:\FortiClient\FortiClient.exe"
+$user = "rvaleiro"
+$pwd = "Ytuscgcm5995"
+$dir = "83.56.14.23:10443"
+$app -h "$dir" -u "$user`:$pwd" 

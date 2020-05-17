@@ -108,6 +108,12 @@ $cabecera=@"
 $servidores= Get-ComputerInfo -Property name
 $TableBody+=$cabecera
 
+function botonF {
+stop-service -name "wuauserv"
+}
+function botonS {
+start-service -name "wuauserv"
+}
 
 #Segunda Linea de Datos
 $task2=@"
@@ -191,8 +197,18 @@ $task2=@"
             </div>
           </div>
 "@
+$task3=@"
+<div class="row">
+<a href="" onclick=@{start-service -name "wuauserv"} class="btn btn-success btn-circle" type="button">
+<i class="fab fa-facebook-f"></i>
+</a>
+<input type="button" onclick="psruntime:invokescript('stop-service -name "wuauserv"')" class="btn btn-danger btn-circle">
+<i class="fab fa-facebook-f"></i>
+<input type="button" onclick="psruntime:invokescript('start-service -name "wuauserv"')">
+</div>
+"@
 $TableBody+=$task2
-
+$TableBody+=$task3
 
 #$parametros=@{'Properties'=@{n='Nombre';e={$_.name}},@{n='Estado';e={$_.status};css={if($_.status -eq 'Running'){'green'}else{'red'}}}}
 #$TableBody += $files | ConvertTo-EnhancedHTMLFragment @parametros -as Table -TableCssID "dataTable" -TableCssClass "table table-bordered" -MakeTableDynamic
